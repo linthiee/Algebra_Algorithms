@@ -7,7 +7,7 @@ public static class Algorithms
 
     public static void BitonicSort<T>(T[] array) where T : IComparable<T>
     {
-        if (array == null || array.Length <= 1) 
+        if (array == null || array.Length <= 1)
             return;
 
         if ((array.Length & (array.Length - 1)) != 0)
@@ -16,10 +16,10 @@ public static class Algorithms
         Debug.Log("Original: ");
 
         foreach (T item in array)
-         Debug.Log(item);
-        
+            Debug.Log(item);
+
         BitonicSortRecursive(array, 0, array.Length, true);
-        
+
         Debug.Log("Sorted: ");
 
         foreach (T item in array)
@@ -62,19 +62,52 @@ public static class Algorithms
 
         if ((isAscending && comparison > 0) || (!isAscending && comparison < 0))
         {
-            T temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
+            // T temp = array[i];
+            // array[i] = array[j];
+            // array[j] = temp; 
+            
+            (array[i], array[j]) = (array[j], array[i]);
         }
     }
 
     #endregion Bitonic
+    #region Selection
 
     public static void SelectionSort<T>(T[] array) where T : IComparable<T>
     {
-        throw new System.NotImplementedException();
-    }
+        Debug.Log("Original: ");
 
+        foreach (T item in array)
+            Debug.Log(item);
+        
+        for (int i = 0; i < array.Length - 1; i++)
+        {
+            int smallestIdx = i;
+
+            for (int j = i + 1; j < array.Length; j++)
+            {
+                if (array[j].CompareTo(array[smallestIdx]) < 0)
+                {
+                    smallestIdx = j;
+                }
+            }
+
+            if (smallestIdx != i)
+            {
+                // T temp = array[i];
+                // array[i] = array[smallestIdx];
+                // array[smallestIdx] = temp;
+                
+                (array[i], array[smallestIdx]) = (array[smallestIdx], array[i]);
+            }
+        }
+        
+        Debug.Log("Sorted: ");
+
+        foreach (T item in array)
+            Debug.Log(item);
+    }
+    #endregion Selection
     public static void CocktailShakerSort<T>(T[] array) where T : IComparable<T>
     {
         throw new System.NotImplementedException();
