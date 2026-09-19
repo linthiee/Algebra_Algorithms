@@ -175,24 +175,24 @@ public static class Algorithms
 
         foreach (T item in array)
             Debug.Log(item);
-    
+
         if (array.Length > 1)
         {
             PerformQuickSort(array, 0, array.Length - 1);
         }
-    
+
         Debug.Log("Sorted: ");
 
         foreach (T item in array)
             Debug.Log(item);
     }
-    
+
     private static void PerformQuickSort<T>(T[] array, int low, int high) where T : IComparable<T>
     {
         if (low < high)
         {
             int pivotIndex = Partition(array, low, high);
-            
+
             PerformQuickSort(array, low, pivotIndex - 1);
             PerformQuickSort(array, pivotIndex + 1, high);
         }
@@ -201,7 +201,7 @@ public static class Algorithms
     private static int Partition<T>(T[] array, int low, int high) where T : IComparable<T>
     {
         T pivot = array[high];
-    
+
         int i = low - 1;
 
         for (int j = low; j < high; j++)
@@ -209,7 +209,7 @@ public static class Algorithms
             if (array[j].CompareTo(pivot) <= 0)
             {
                 i++;
-                
+
                 if (i != j)
                 {
                     (array[i], array[j]) = (array[j], array[i]);
@@ -228,10 +228,82 @@ public static class Algorithms
 
     #endregion Quick
 
-    public static void RadixSort_LSD<T>(T[] array) where T : IComparable<T>
+    #region Radix_LSD
+
+    public static void RadixSort_LSD(int[] array)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Original: ");
+
+        foreach (int item in array)
+            Debug.Log(item);
+
+        int min = array[0];
+        int max = array[0];
+
+        for (int i = 1; i < array.Length; i++)
+        {
+            if (array[i].CompareTo(min) < 0)
+                min = array[i];
+    
+            if (array[i].CompareTo(max) > 0)
+                max = array[i];
+        }
+
+        if (min < 0)
+        {
+            for (int i = 0; i < array.Length; i++)
+                array[i] -= min; 
+        
+            max -= min;
+        }
+
+        for (long exp = 1; max / exp > 0; exp *= 10)
+        {
+            CountingSort(array, (int)exp);
+        }
+
+        if (min < 0)
+        {
+            for (int i = 0; i < array.Length; i++)
+                array[i] += min;
+        }
+        
+        Debug.Log("Sorted: ");
+
+        foreach (int item in array)
+            Debug.Log(item);
     }
+
+    private static void CountingSort(int[] array, int exp)
+    {
+        int[] output = new int[array.Length]; 
+        int[] count = new int[10]; 
+
+        for (int i = 0; i < array.Length; i++)
+        {
+            int digit = array[i] / exp % 10;
+            count[digit]++;
+        }
+
+        for (int i = 1; i < 10; i++)
+        {
+            count[i] += count[i - 1];
+        }
+
+        for (int i = array.Length - 1; i >= 0; i--)
+        {
+            int digit = array[i] / exp % 10;
+            output[count[digit] - 1] = array[i];
+            count[digit]--;
+        }
+
+        for (int i = 0; i < array.Length; i++)
+        {
+            array[i] = output[i];
+        }
+    }
+
+    #endregion Radix_LSD
 
     public static void ShellSort<T>(T[] array) where T : IComparable<T>
     {
