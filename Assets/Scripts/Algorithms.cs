@@ -339,11 +339,47 @@ public static class Algorithms
     
     #endregion Shell
 
+    #region Bogo
     public static void BogoSort<T>(T[] array) where T : IComparable<T>
     {
-        throw new System.NotImplementedException();
-    }
+        Debug.Log("Original: ");
 
+        foreach (T item in array)
+            Debug.Log(item);
+
+        System.Random random = new System.Random();
+
+        while (!IsSorted(array))
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                int randomIndex = random.Next(i, array.Length);
+            
+                if (i != randomIndex)
+                {
+                    (array[i], array[randomIndex]) = (array[randomIndex], array[i]);
+                }
+            }
+        }
+
+        Debug.Log("Sorted: ");
+
+        foreach (T item in array)
+            Debug.Log(item);
+    }
+    
+    private static bool IsSorted<T>(T[] array) where T : IComparable<T>
+    {
+        for (int i = 0; i < array.Length - 1; i++)
+        {
+            if (array[i].CompareTo(array[i + 1]) > 0)
+            {
+                return false; 
+            }
+        }
+        return true; 
+    }
+    #endregion Bogo
     public static void RadixSort_MSD<T>(T[] array) where T : IComparable<T>
     {
         throw new System.NotImplementedException();
