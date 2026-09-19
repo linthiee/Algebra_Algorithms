@@ -390,7 +390,7 @@ public static class Algorithms
     public static void RadixSort_MSD(int[] array)
     {
         Debug.Log("Original: ");
-        foreach (int item in array) 
+        foreach (int item in array)
             Debug.Log(item);
 
         if (array.Length <= 1)
@@ -403,8 +403,8 @@ public static class Algorithms
         {
             if (array[i].CompareTo(min) < 0)
                 min = array[i];
-            
-            if (array[i].CompareTo(max) > 0) 
+
+            if (array[i].CompareTo(max) > 0)
                 max = array[i];
         }
 
@@ -412,7 +412,7 @@ public static class Algorithms
         {
             for (int i = 0; i < array.Length; i++)
                 array[i] -= min;
-            
+
             max -= min;
         }
 
@@ -424,12 +424,12 @@ public static class Algorithms
 
         if (min < 0)
         {
-            for (int i = 0; i < array.Length; i++) 
+            for (int i = 0; i < array.Length; i++)
                 array[i] += min;
         }
 
         Debug.Log("Sorted: ");
-        foreach (int item in array) 
+        foreach (int item in array)
             Debug.Log(item);
     }
 
@@ -460,7 +460,7 @@ public static class Algorithms
     {
         int[] output = new int[high - low + 1];
         int[] count = new int[10];
-        int[] bucketSizes = new int[10]; 
+        int[] bucketSizes = new int[10];
 
         for (int i = low; i <= high; i++)
         {
@@ -491,10 +491,104 @@ public static class Algorithms
 
     #endregion Radix_MSD
 
+    #region Intro
+
     public static void IntroSort<T>(T[] array) where T : IComparable<T>
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Original: ");
+
+        foreach (T item in array)
+            Debug.Log(item);
+
+        if (array.Length > 1)
+        {
+            int depthLimit = 2 * (int)Math.Floor(Math.Log(array.Length, 2));
+
+            IntroSortRecursive(array, 0, array.Length - 1, depthLimit);
+        }
+
+        Debug.Log("Sorted: ");
+
+        foreach (T item in array)
+            Debug.Log(item);
     }
+
+    private static void IntroSortRecursive<T>(T[] array, int low, int high, int depthLimit) where T : IComparable<T>
+    {
+        int size = high - low + 1;
+        int sizeToInsertionSort = 16;
+
+        if (size <= sizeToInsertionSort)
+        {
+            InsertionSortRange(array, low, high);
+            return;
+        }
+
+        if (depthLimit == 0)
+        {
+            HeapSortRange(array, low, high);
+            return;
+        }
+
+        int pivotIndex = Partition(array, low, high);
+
+        IntroSortRecursive(array, low, pivotIndex - 1, depthLimit - 1);
+        IntroSortRecursive(array, pivotIndex + 1, high, depthLimit - 1);
+    }
+
+    private static void InsertionSortRange<T>(T[] array, int low, int high) where T : IComparable<T>
+    {
+        for (int i = low + 1; i <= high; i++)
+        {
+            T temp = array[i];
+            int j = i;
+
+            while (j > low && array[j - 1].CompareTo(temp) > 0)
+            {
+                array[j] = array[j - 1];
+                j--;
+            }
+
+            array[j] = temp;
+        }
+    }
+
+    private static void HeapSortRange<T>(T[] array, int low, int high) where T : IComparable<T>
+    {
+        int rangeSize = high - low + 1;
+
+        for (int i = rangeSize / 2 - 1; i >= 0; i--)
+        {
+            Heapify(array, rangeSize, i, low);
+        }
+
+        for (int i = rangeSize - 1; i > 0; i--)
+        {
+            (array[low], array[low + i]) = (array[low + i], array[low]);
+            Heapify(array, i, 0, low);
+        }
+    }
+
+    private static void Heapify<T>(T[] array, int rangeSize, int i, int offset) where T : IComparable<T>
+    {
+        int largest = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
+
+        if (left < rangeSize && array[offset + left].CompareTo(array[offset + largest]) > 0)
+            largest = left;
+
+        if (right < rangeSize && array[offset + right].CompareTo(array[offset + largest]) > 0)
+            largest = right;
+
+        if (largest != i)
+        {
+            (array[offset + i], array[offset + largest]) = (array[offset + largest], array[offset + i]);
+            Heapify(array, rangeSize, largest, offset);
+        }
+    }
+
+    #endregion Intro
 
     public static void AdaptiveMergeSort<T>(T[] array) where T : IComparable<T>
     {
@@ -502,6 +596,7 @@ public static class Algorithms
     }
 
     #region Bubble
+
     public static void BubbleSort<T>(T[] array) where T : IComparable<T>
     {
         Debug.Log("Original: ");
@@ -512,7 +607,7 @@ public static class Algorithms
         for (int i = 0; i < array.Length - 1; i++)
         {
             bool swapped = false;
-            
+
             for (int j = 0; j < array.Length - 1 - i; j++)
             {
                 if (array[j].CompareTo(array[j + 1]) > 0)
@@ -520,12 +615,12 @@ public static class Algorithms
                     // T temp = array[j];
                     // array[j] = array[j + 1];
                     // array[j + 1] = temp;
-                
+
                     (array[j], array[j + 1]) = (array[j + 1], array[j]);
                     swapped = true;
                 }
-            } 
-         
+            }
+
             if (!swapped)
             {
                 break;
@@ -537,8 +632,9 @@ public static class Algorithms
         foreach (T item in array)
             Debug.Log(item);
     }
-    
+
     #endregion Bubble
+
     public static void GnomeSort<T>(T[] array) where T : IComparable<T>
     {
         throw new System.NotImplementedException();
@@ -549,13 +645,54 @@ public static class Algorithms
         throw new System.NotImplementedException();
     }
 
+    #region Heap
+
     public static void HeapSort<T>(T[] array) where T : IComparable<T>
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Original: ");
+
+        foreach (T item in array)
+            Debug.Log(item);
+        
+        for (int i = array.Length / 2 - 1; i >= 0; i--)
+        {
+            Heapify(array, array.Length, i, 0);
+        }
+
+        for (int i = array.Length - 1; i > 0; i--)
+        {
+            (array[0], array[i]) = (array[i], array[0]);
+
+            Heapify(array, i, 0, 0);
+        }
+
+        Debug.Log("Sorted: ");
+
+        foreach (T item in array)
+            Debug.Log(item);
     }
 
+    #endregion Heap
+
+    #region Insertion
     public static void InsertionSort<T>(T[] array) where T : IComparable<T>
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Original: ");
+
+        foreach (T item in array)
+            Debug.Log(item);
+
+        if (array.Length > 1)
+        {
+            InsertionSortRange(array, 0, array.Length - 1);
+        }
+
+        Debug.Log("Sorted: ");
+
+        foreach (T item in array)
+            Debug.Log(item);
     }
+    
+    #endregion Insertion
+
 }
