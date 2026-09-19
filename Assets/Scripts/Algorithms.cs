@@ -244,7 +244,7 @@ public static class Algorithms
         {
             if (array[i].CompareTo(min) < 0)
                 min = array[i];
-    
+
             if (array[i].CompareTo(max) > 0)
                 max = array[i];
         }
@@ -252,8 +252,8 @@ public static class Algorithms
         if (min < 0)
         {
             for (int i = 0; i < array.Length; i++)
-                array[i] -= min; 
-        
+                array[i] -= min;
+
             max -= min;
         }
 
@@ -267,7 +267,7 @@ public static class Algorithms
             for (int i = 0; i < array.Length; i++)
                 array[i] += min;
         }
-        
+
         Debug.Log("Sorted: ");
 
         foreach (int item in array)
@@ -276,8 +276,8 @@ public static class Algorithms
 
     private static void CountingSort(int[] array, int exp)
     {
-        int[] output = new int[array.Length]; 
-        int[] count = new int[10]; 
+        int[] output = new int[array.Length];
+        int[] count = new int[10];
 
         for (int i = 0; i < array.Length; i++)
         {
@@ -306,19 +306,20 @@ public static class Algorithms
     #endregion Radix_LSD
 
     #region Shell
+
     public static void ShellSort<T>(T[] array) where T : IComparable<T>
     {
         Debug.Log("Original: ");
 
         foreach (T item in array)
             Debug.Log(item);
-    
+
         for (int gap = array.Length / 2; gap > 0; gap /= 2)
         {
             for (int i = gap; i < array.Length; i++)
             {
                 T temp = array[i];
-            
+
                 int j = i;
 
                 while (j >= gap && array[j - gap].CompareTo(temp) > 0)
@@ -330,16 +331,17 @@ public static class Algorithms
                 array[j] = temp;
             }
         }
-    
+
         Debug.Log("Sorted: ");
 
         foreach (T item in array)
             Debug.Log(item);
     }
-    
+
     #endregion Shell
 
     #region Bogo
+
     public static void BogoSort<T>(T[] array) where T : IComparable<T>
     {
         Debug.Log("Original: ");
@@ -354,7 +356,7 @@ public static class Algorithms
             for (int i = 0; i < array.Length; i++)
             {
                 int randomIndex = random.Next(i, array.Length);
-            
+
                 if (i != randomIndex)
                 {
                     (array[i], array[randomIndex]) = (array[randomIndex], array[i]);
@@ -367,23 +369,127 @@ public static class Algorithms
         foreach (T item in array)
             Debug.Log(item);
     }
-    
+
     private static bool IsSorted<T>(T[] array) where T : IComparable<T>
     {
         for (int i = 0; i < array.Length - 1; i++)
         {
             if (array[i].CompareTo(array[i + 1]) > 0)
             {
-                return false; 
+                return false;
             }
         }
-        return true; 
+
+        return true;
     }
+
     #endregion Bogo
-    public static void RadixSort_MSD<T>(T[] array) where T : IComparable<T>
+
+    #region Radix_MSD
+
+    public static void RadixSort_MSD(int[] array)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Original: ");
+        foreach (int item in array) 
+            Debug.Log(item);
+
+        if (array.Length <= 1)
+            return;
+
+        int min = array[0];
+        int max = array[0];
+
+        for (int i = 1; i < array.Length; i++)
+        {
+            if (array[i].CompareTo(min) < 0)
+                min = array[i];
+            
+            if (array[i].CompareTo(max) > 0) 
+                max = array[i];
+        }
+
+        if (min < 0)
+        {
+            for (int i = 0; i < array.Length; i++)
+                array[i] -= min;
+            
+            max -= min;
+        }
+
+        long exp = 1;
+        while (max / exp >= 10)
+            exp *= 10;
+
+        MSD_Recursive(array, 0, array.Length - 1, (int)exp);
+
+        if (min < 0)
+        {
+            for (int i = 0; i < array.Length; i++) 
+                array[i] += min;
+        }
+
+        Debug.Log("Sorted: ");
+        foreach (int item in array) 
+            Debug.Log(item);
     }
+
+    private static void MSD_Recursive(int[] array, int low, int high, int exp)
+    {
+        if (low >= high || exp == 0)
+            return;
+
+        int[] bucketSizes = CountingSortMSD(array, low, high, exp);
+
+        int[] bucketStarts = new int[10];
+        bucketStarts[0] = low;
+        for (int i = 1; i < 10; i++)
+        {
+            bucketStarts[i] = bucketStarts[i - 1] + bucketSizes[i - 1];
+        }
+
+        for (int i = 0; i < 10; i++)
+        {
+            if (bucketSizes[i] > 1)
+            {
+                MSD_Recursive(array, bucketStarts[i], bucketStarts[i] + bucketSizes[i] - 1, exp / 10);
+            }
+        }
+    }
+
+    private static int[] CountingSortMSD(int[] array, int low, int high, int exp)
+    {
+        int[] output = new int[high - low + 1];
+        int[] count = new int[10];
+        int[] bucketSizes = new int[10]; 
+
+        for (int i = low; i <= high; i++)
+        {
+            int digit = array[i] / exp % 10;
+            count[digit]++;
+            bucketSizes[digit]++;
+        }
+
+        for (int i = 1; i < 10; i++)
+        {
+            count[i] += count[i - 1];
+        }
+
+        for (int i = high; i >= low; i--)
+        {
+            int digit = array[i] / exp % 10;
+            output[count[digit] - 1] = array[i];
+            count[digit]--;
+        }
+
+        for (int i = 0; i < output.Length; i++)
+        {
+            array[low + i] = output[i];
+        }
+
+        return bucketSizes;
+    }
+
+    #endregion Radix_MSD
 
     public static void IntroSort<T>(T[] array) where T : IComparable<T>
     {
@@ -395,11 +501,44 @@ public static class Algorithms
         throw new System.NotImplementedException();
     }
 
+    #region Bubble
     public static void BubbleSort<T>(T[] array) where T : IComparable<T>
     {
-        throw new System.NotImplementedException();
-    }
+        Debug.Log("Original: ");
 
+        foreach (T item in array)
+            Debug.Log(item);
+
+        for (int i = 0; i < array.Length - 1; i++)
+        {
+            bool swapped = false;
+            
+            for (int j = 0; j < array.Length - 1 - i; j++)
+            {
+                if (array[j].CompareTo(array[j + 1]) > 0)
+                {
+                    // T temp = array[j];
+                    // array[j] = array[j + 1];
+                    // array[j + 1] = temp;
+                
+                    (array[j], array[j + 1]) = (array[j + 1], array[j]);
+                    swapped = true;
+                }
+            } 
+         
+            if (!swapped)
+            {
+                break;
+            }
+        }
+
+        Debug.Log("Sorted: ");
+
+        foreach (T item in array)
+            Debug.Log(item);
+    }
+    
+    #endregion Bubble
     public static void GnomeSort<T>(T[] array) where T : IComparable<T>
     {
         throw new System.NotImplementedException();
