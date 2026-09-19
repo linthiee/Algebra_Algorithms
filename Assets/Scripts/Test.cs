@@ -3,14 +3,9 @@ using static Algorithms;
 
 public class Test : MonoBehaviour
 {
-    void Start()
+    private void Start()
     {
         int[] a = { -1, 4, -3, 8, 5, 9, 0, 22, 90, 88, 11 };
-        InsertionSort(a);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        GnomeSort(a);
     }
 }
