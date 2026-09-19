@@ -65,12 +65,13 @@ public static class Algorithms
             // T temp = array[i];
             // array[i] = array[j];
             // array[j] = temp; 
-            
+
             (array[i], array[j]) = (array[j], array[i]);
         }
     }
 
     #endregion Bitonic
+
     #region Selection
 
     public static void SelectionSort<T>(T[] array) where T : IComparable<T>
@@ -79,7 +80,7 @@ public static class Algorithms
 
         foreach (T item in array)
             Debug.Log(item);
-        
+
         for (int i = 0; i < array.Length - 1; i++)
         {
             int smallestIdx = i;
@@ -97,21 +98,74 @@ public static class Algorithms
                 // T temp = array[i];
                 // array[i] = array[smallestIdx];
                 // array[smallestIdx] = temp;
-                
+
                 (array[i], array[smallestIdx]) = (array[smallestIdx], array[i]);
             }
         }
-        
+
         Debug.Log("Sorted: ");
 
         foreach (T item in array)
             Debug.Log(item);
     }
+
     #endregion Selection
+
+    #region Cocktail
+
     public static void CocktailShakerSort<T>(T[] array) where T : IComparable<T>
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Original: ");
+
+        foreach (T item in array)
+            Debug.Log(item);
+
+        if (array.Length > 1)
+        {
+            bool swapped = true;
+            int start = 0;
+            int end = array.Length - 1;
+
+            while (swapped)
+            {
+                swapped = false;
+
+                for (int i = start; i < end; i++)
+                {
+                    if (array[i].CompareTo(array[i + 1]) > 0)
+                    {
+                        (array[i], array[i + 1]) = (array[i + 1], array[i]);
+                        swapped = true;
+                    }
+                }
+
+                if (!swapped)
+                    break;
+
+                swapped = false;
+
+                end--;
+
+                for (int i = end - 1; i >= start; i--)
+                {
+                    if (array[i].CompareTo(array[i + 1]) > 0)
+                    {
+                        (array[i], array[i + 1]) = (array[i + 1], array[i]);
+                        swapped = true;
+                    }
+                }
+
+                start++;
+            }
+        }
+
+        Debug.Log("Sorted: ");
+
+        foreach (T item in array)
+            Debug.Log(item);
     }
+
+    #endregion Cocktail
 
     public static void QuickSort<T>(T[] array) where T : IComparable<T>
     {
