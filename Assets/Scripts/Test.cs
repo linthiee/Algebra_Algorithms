@@ -5,8 +5,8 @@ public class Test : MonoBehaviour
 {
     void Start()
     {
-        int[] a = { 1, 4, 3, 8, 5, 9, 0, 22 };
-        CocktailShakerSort(a);
+        int[] a = { 1, 4, 3, 8, 5, 9, 0, 22, 90, 88, 11 };
+        QuickSort(a);
     }
 
     // Update is called once per frame

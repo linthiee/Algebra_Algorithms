@@ -167,10 +167,66 @@ public static class Algorithms
 
     #endregion Cocktail
 
+    #region Quick
+
     public static void QuickSort<T>(T[] array) where T : IComparable<T>
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Original: ");
+
+        foreach (T item in array)
+            Debug.Log(item);
+    
+        if (array.Length > 1)
+        {
+            PerformQuickSort(array, 0, array.Length - 1);
+        }
+    
+        Debug.Log("Sorted: ");
+
+        foreach (T item in array)
+            Debug.Log(item);
     }
+    
+    private static void PerformQuickSort<T>(T[] array, int low, int high) where T : IComparable<T>
+    {
+        if (low < high)
+        {
+            int pivotIndex = Partition(array, low, high);
+            
+            PerformQuickSort(array, low, pivotIndex - 1);
+            PerformQuickSort(array, pivotIndex + 1, high);
+        }
+    }
+
+    private static int Partition<T>(T[] array, int low, int high) where T : IComparable<T>
+    {
+        T pivot = array[high];
+    
+        int i = low - 1;
+
+        for (int j = low; j < high; j++)
+        {
+            if (array[j].CompareTo(pivot) <= 0)
+            {
+                i++;
+                
+                if (i != j)
+                {
+                    (array[i], array[j]) = (array[j], array[i]);
+                }
+            }
+        }
+
+        i++;
+        if (i != high)
+        {
+            (array[i], array[high]) = (array[high], array[i]);
+        }
+
+        return i;
+    }
+
+    #endregion Quick
 
     public static void RadixSort_LSD<T>(T[] array) where T : IComparable<T>
     {
