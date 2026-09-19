@@ -244,7 +244,7 @@ public static class Algorithms
         {
             if (array[i].CompareTo(min) < 0)
                 min = array[i];
-    
+
             if (array[i].CompareTo(max) > 0)
                 max = array[i];
         }
@@ -252,8 +252,8 @@ public static class Algorithms
         if (min < 0)
         {
             for (int i = 0; i < array.Length; i++)
-                array[i] -= min; 
-        
+                array[i] -= min;
+
             max -= min;
         }
 
@@ -267,7 +267,7 @@ public static class Algorithms
             for (int i = 0; i < array.Length; i++)
                 array[i] += min;
         }
-        
+
         Debug.Log("Sorted: ");
 
         foreach (int item in array)
@@ -276,8 +276,8 @@ public static class Algorithms
 
     private static void CountingSort(int[] array, int exp)
     {
-        int[] output = new int[array.Length]; 
-        int[] count = new int[10]; 
+        int[] output = new int[array.Length];
+        int[] count = new int[10];
 
         for (int i = 0; i < array.Length; i++)
         {
@@ -305,10 +305,39 @@ public static class Algorithms
 
     #endregion Radix_LSD
 
+    #region Shell
+
     public static void ShellSort<T>(T[] array) where T : IComparable<T>
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Original: ");
+
+        foreach (T item in array)
+            Debug.Log(item);
+
+        for (int gap = array.Length / 2; gap > 0; gap /= 2)
+        {
+            for (int i = gap; i < array.Length; i++)
+            {
+                T temp = array[i];
+                int j = i;
+
+                while (j >= gap && array[j - gap].CompareTo(temp) > 0)
+                {
+                    array[j] = array[j - gap];
+                    j -= gap;
+                }
+
+                array[j] = temp;
+            }
+        }
+
+        Debug.Log("Sorted: ");
+
+        foreach (T item in array)
+            Debug.Log(item);
     }
+
+    #endregion Shell
 
     public static void BogoSort<T>(T[] array) where T : IComparable<T>
     {
